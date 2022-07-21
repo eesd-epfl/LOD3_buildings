@@ -23,8 +23,8 @@ from torch.utils.data import DataLoader
 from math import sqrt as sqrt
 from cnn.corner.src.data_loader import get_loader
 from cnn.corner.src.network import U_Net16
-from cnn.ssd.ssd_project import ssd
-from cnn.ssd.ssd_project.detection import *
+#from cnn.ssd.ssd_project import ssd
+#from cnn.ssd.ssd_project.detection import *
 from cnn.semantic.src.data_set import open_dataset
 from sklearn.linear_model import LinearRegression
 import scipy.spatial
