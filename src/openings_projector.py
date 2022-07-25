@@ -397,12 +397,6 @@ def open2local(X, faces_normals, normal_op_plane):
         ed_h2 = (X[:3, 4*ee + 3] - X[:3, 4*ee + 2])/np.linalg.norm(X[:3, 4*ee + 3] - X[:3, 4*ee + 2])
         dir_vect_h[2*ee] = ed_h1
         dir_vect_h[2*ee+1] = ed_h2
-        
-
-
-
-
-
 
 
     #Choosing building normal with similar direction to the edges
@@ -410,7 +404,7 @@ def open2local(X, faces_normals, normal_op_plane):
     #Look for the dir_vect_h with minimum angle with building normals
     ang_dir_h = list([])
     for j in faces_normals:
-        angle = np.arccos(np.dot(j,mean_dir_h))*180/np.pi
+        angle = np.arccos(np.dot(j/np.linalg.norm(j),mean_dir_h))*180/np.pi
         if angle > 180:
             angle -= 180
         ang_dir_h.append(angle)
@@ -422,7 +416,8 @@ def open2local(X, faces_normals, normal_op_plane):
     else:
         ind_dir_h = np.argmin(np.abs(ang_dir_h-180))
         
-    normal_dir_h_plane = faces_normals[ind_dir_h]
+    normal_dir_h_plane = faces_normals[ind_dir_h]/ np.linalg.norm(faces_normals[ind_dir_h])
+    normal_op_plane = normal_op_plane/np.linalg.norm(normal_op_plane)
     proj_norm_dir_h = normal_dir_h_plane - ((np.dot(normal_dir_h_plane,normal_op_plane))/((np.linalg.norm(normal_op_plane))**2))*normal_op_plane
     proj_norm_dir_h = proj_norm_dir_h/(np.linalg.norm(proj_norm_dir_h))
     
@@ -612,7 +607,7 @@ def op_aligning3(Xl_al2, cte1 = .1, cte2 = .3):
     #Vertical centroids aligment#!
     threshold = cte1*np.abs(np.min(((Xl_al3[0,0]-Xl_al3[0,1]),(Xl_al3[1,0]-Xl_al3[1,2]))))     
     vert_checker = np.zeros(len(centroids)) #Checker to identify points already aligned
-    centroids_al = np.zeros_like(centroids) 
+    centroids_al = np.copy(centroids) 
     for ii, pt in enumerate(centroids[:,0]):
         if vert_checker[ii] == 0:
             distances = np.abs(pt - centroids[:,0])
